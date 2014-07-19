@@ -37,8 +37,7 @@ package
 		{
 			goal.type = "goal";
 			levelLoader();
-			
-			add(new Healthbar(5, 50, 5, 10, player, "healthCurrent", "healthTotal"));
+			healthBarAdd();
 			
 			//create dem tweens fo' da camera handla
 			addTween(cameraTweenX, true);
@@ -137,6 +136,11 @@ package
 			add(player);
 			player.x = spawnX;
 			player.y = spawnY;
+		}
+		
+		private function healthBarAdd():void
+		{
+			add(new Healthbar(5, 50, 5, 10, player, "healthCurrent", "healthTotal"));
 		}
 	}
 }
