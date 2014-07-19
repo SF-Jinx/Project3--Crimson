@@ -59,17 +59,18 @@ package
 			camera.y = player.y - (FP.screen.height / 2);
 		}
 		
-		private function backGroundLoader(drop:Class, path:Class, block:Class):void
+		private function backGroundLoader(drop:Class, path:Class, block:Class):void//, scrollFG:Class):void
 		{
 			//Create backdrop elements to so they can be added to a list
 			background 	= new Backdrop (drop, true, true);
 			footpath 	= new Backdrop (path, false, false);
 			blocker 	= new Backdrop (block, false, false);
+//			scrollingForeground = new Backdrop (scrollFG, true, true);
 			
 			//Reduce scroll factor for backgrounds which are further recessed
 			//to create parallax effect
-			background.scrollX = .3;
-			background.scrollY = .3;
+			background.scrollX = .7;
+			background.scrollY = .7;
 			
 			//Shift the unwalkable stuff so that it matches - fix this graphically
 			//in the future

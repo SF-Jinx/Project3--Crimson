@@ -30,6 +30,7 @@ package
 			graphic = bullet;
 			bullet.smooth;
 			bullet.centerOO();
+			bullet.scale = 2;
 			
 			this.x = x;
 			this.y = y;			
@@ -41,8 +42,6 @@ package
 			//need multiple graphics so use addgraphic instead of graphic =
 			addGraphic(bullet);
 		}
-		
-		private var faggotsAreGay:Boolean  = false;
 		
 		override public function update():void 
 		{
@@ -58,11 +57,10 @@ package
 				speed = 700;
 			}
 			counter += 1 * FP.elapsed;
-			if (dead() || collide("walls", x, y)) {	
+			if (dead() || collide("walls", x, y)) {
 				speed = 0;
 				if (_bulletTrail != null) { _bulletTrail.visible = false; }
 				else if (_chargedTrail != null) { _chargedTrail.visible = false; }
-				trace ("niggas");
 				world.add(new Explosion(x, y));
 				this.visible = false;
 				world.remove(this);
@@ -104,7 +102,6 @@ package
 		{
 			if (counter * speed > range) {
 				graphic.visible = false;
-				faggotsAreGay = true;
 				return true;
 			}
 			return false;

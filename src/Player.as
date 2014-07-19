@@ -1,7 +1,9 @@
 package  
 {
+	import flash.display.DisplayObject;
 	import flash.display.Graphics;
 	import flash.display.SpreadMethod;
+	import flash.display.Sprite;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	import net.flashpunk.*;
@@ -34,6 +36,8 @@ package
 		
 		private var sprGabriel:Spritemap = new Spritemap(Assets.Gphx_Gabriel, 29, 32);
 		private var sprGabrielCopy:Spritemap = new Spritemap(Assets.Gphx_Gabriel, 29, 32);
+		private var sprLucas:Spritemap = new Spritemap(Assets.Gphx_SimpleChar, 96, 96);
+		private var sprLucasSword:Spritemap = new Spritemap(Assets.Gphx_SimpleChar, 96, 96);
 		
 		//sound
 		private var regularShot:Sfx = new Sfx(Assets.GUNSHOT);
@@ -44,32 +48,20 @@ package
 		
 		public function Player() 
 		{
-			graphic = sprGabriel;
+			graphic = sprLucas;
 			layer = 0;
 			
-			/* Code for gphxHunter
-			 * sprShooter.add("charge", [2, 3, 4, 5], 20, false); 
-			sprShooter.add("loose", [6], 20, false);*/
+//			createSpriteFromSpritemap(sprGabriel);
+//			createSpriteFromSpritemap(sprGabrielCopy);
+			createSimpleCharSprite(sprLucas);
+			createSimpleCharAttack(sprLucasSword);
 			
-/*			sprShooter.add("walk up", 	[0, 1, 2, 3, 4, 5], 10, true);
-			sprShooter.add("walk down", [6, 7, 8, 9, 10, 11], 10, true);
-			sprShooter.add("walk left", [12, 13, 14, 15, 16, 17], 10, true);
-			sprShooter.add("walk right", [18, 19, 20, 21, 22, 23], 10, true);
-			sprShooter.add("face up", 	[0], 0, false);
-			sprShooter.add("face down", [6], 0, false);
-			sprShooter.add("face left", [12], 0, false);
-			sprShooter.add("face right", [18], 0, false);*/
-			createSpriteFromSpritemap(sprGabriel);
-			createSpriteFromSpritemap(sprGabrielCopy);
+			
 			currentAnim = "face right";
-			
-/*			Input.define("Left", 	Key.A, Key.LEFT);
-			Input.define("Right", 	Key.D, Key.RIGHT);
-			Input.define("Up", 		Key.W, Key.UP);
-			Input.define("Down", 	Key.S, Key.DOWN);
-			Input.define("Shoot", 	Key.SPACE);
-			Input.define("Dash", 	Key.SHIFT);*/
-			sprGabriel.centerOO();
+
+//			sprGabriel.centerOO();
+			sprLucas.centerOO();
+			sprLucasSword.centerOO();
 			setHitbox(24, 25, 12, 0);
 			
 			//charge timer
@@ -87,14 +79,19 @@ package
 		
 		override public function update():void
 		{	
-			sprGabriel.alpha = 1;
+//			sprGabriel.alpha = 1;
+			sprLucas.alpha = 1;
+			sprLucasSword.alpha = 1;
 			var horizontalMovement:Boolean = true;
 			var verticalMovement:Boolean = true;
-			sprGabriel.play(currentAnim);
-			sprGabrielCopy.play(currentAnim);
+//			sprGabriel.play(currentAnim);
+			sprLucas.play(currentAnim);
+			sprLucasSword.play(currentAnim);
+//			sprGabrielCopy.play(currentAnim);
 			
 			//Set the copy to the same index as the original
-			sprGabrielCopy.setAnimFrame(currentAnim, sprGabriel.index);
+//			sprGabrielCopy.setAnimFrame(currentAnim, sprGabriel.index);
+			
 			
 			layer = 0;
 //			playerSpeed = 2;
@@ -131,11 +128,11 @@ package
 				
 				if (Input.check("Up"))    { 
 					y -= playerSpeed; 
-					currentAnim = "walk left";
+					currentAnim = "walk up";
 				}
 				else if (Input.check("Down"))  { 
 					y += playerSpeed;
-					currentAnim = "walk right"; 
+					currentAnim = "walk down"; 
 				}
 				else verticalMovement = false;
 				
@@ -174,6 +171,20 @@ package
 				//sprShooter.play("loose", true);
 				fireBullet();
 				healthCurrent = healthCurrent - 10;
+			}
+			
+			if (Input.released("Attack"))
+			{
+				switch(currentAnim) {
+				case "walk right"	: currentAnim = "attack right" ; break;
+				case "walk up"		: currentAnim = "attack up" ; break;
+				case "walk left" 	: currentAnim = "attack left" ; break;
+				case "walk down" 	: currentAnim = "attack down" ; break;
+				case "face right"	: currentAnim = "attack right" ; break;
+				case "face up"		: currentAnim = "attack up" ; break;
+				case "face left" 	: currentAnim = "attack left" ; break;
+				case "face down" 	: currentAnim = "attack down" ; break;
+				}
 			}
 			updateCollision();
 			
@@ -329,6 +340,39 @@ package
 			Input.define("Shoot", 	Key.X);
 			Input.define("Dash", 	Key.Z);
 			Input.define("Jump",	Key.C);
+		}
+		
+		private function createSimpleCharSprite (sm:Spritemap):void
+		{
+			sm.add("walk down", [1, 2, 3, 4], 10, true);
+			sm.add("walk up", 	[6, 7, 8, 9], 10, true);
+			sm.add("walk left", [11, 12, 13, 14], 10, true);
+			sm.add("walk right", [16, 17, 18, 19], 10, true);
+			sm.add("face down", [0], 0, false);
+			sm.add("face up", 	[5], 0, false);
+			sm.add("face left", [10], 0, false);
+			sm.add("face right", [15], 0, false);
+			sm.add("attack down", [20, 21, 22], 10, false);
+			sm.add("attack up", [25, 26, 27], 10, false);
+			sm.add("attack left", [30, 31, 32], 10, false);
+			sm.add("attack right", [35, 36, 37], 10, false);
+			
+			Input.define("Left", 	Key.A, Key.LEFT);
+			Input.define("Right", 	Key.D, Key.RIGHT);
+			Input.define("Up", 		Key.W, Key.UP);
+			Input.define("Down", 	Key.S, Key.DOWN);
+			Input.define("Shoot", 	Key.X);
+			Input.define("Dash", 	Key.Z);
+			Input.define("Jump",	Key.C);
+			Input.define("Attack",	Key.V);
+		}
+		
+		private function createSimpleCharAttack(sm:Spritemap):void
+		{
+			sm.add("attack down", 	[null, 23, 24], 10, false);
+			sm.add("attack up", 	[null, 28, 29], 10, false);
+			sm.add("attack left", 	[null, 33, 34], 10, false);
+			sm.add("attack right", 	[null, 38, 39], 10, false);
 		}
 		
 		public function playerCanMove(isAllowed:Boolean):void
