@@ -13,6 +13,7 @@ package
 		[Embed(source = "Assets/357magnum.mp3")] public static const GUNSHOT:Class;
 		[Embed(source = "Assets/boolleht.png")] public static const Gphx_BULLET:Class;
 		[Embed(source = "Assets/simple char - 24x24.PNG")] public static const Gphx_SimpleChar:Class;
+		[Embed(source = "Assets/lucas 24x24.PNG")] public static const Gphx_Lucas:Class;
 		
 	}
 

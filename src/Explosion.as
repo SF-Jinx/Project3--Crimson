@@ -6,15 +6,17 @@ package
 	/**
 	 * ...
 	 * @author Jinx
+	 * 
 	 */
 	public class Explosion extends Entity
 	{
 		protected var _bulletPOP:Emitter;
-		public static var bullet2:Image;
+		private var bullet2:Image;
 		
-		public function Explosion(x:Number = 0, y:Number = 0) 
+		public function Explosion(x:Number = 0, y:Number = 0, explosionImage:Class = null) 
 		{
-			bullet2 = new Image(Assets.Gphx_BULLET);
+//			bullet2 = new Image(Assets.Gphx_BULLET);
+			bullet2 = new Image(explosionImage);
 			graphic = bullet2;
 			bullet2.smooth;
 			bullet2.centerOO();
@@ -22,7 +24,8 @@ package
 			this.x = x;
 			this.y = y;			
 			
-			_bulletPOP = new Emitter(Assets.Gphx_BULLET, 1, 1);
+//			_bulletPOP = new Emitter(Assets.Gphx_BULLET, 1, 1);
+			_bulletPOP = new Emitter(explosionImage, 1, 1);
 			_bulletPOP.newType	("pop", [0]);
 			_bulletPOP.setMotion("pop", 0, 30, 0, 360, 150, .4);
 			_bulletPOP.setAlpha	("pop", 1, .6);
@@ -48,7 +51,6 @@ package
 			if (_bulletPOP.particleCount == 0) 
 			{
 				world.remove(this);
-				bullet2.visible = true;
 			}
 		}
 		

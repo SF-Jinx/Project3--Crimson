@@ -36,8 +36,8 @@ package
 		
 		private var sprGabriel:Spritemap = new Spritemap(Assets.Gphx_Gabriel, 29, 32);
 		private var sprGabrielCopy:Spritemap = new Spritemap(Assets.Gphx_Gabriel, 29, 32);
-		private var sprLucas:Spritemap = new Spritemap(Assets.Gphx_SimpleChar, 96, 96);
-		private var sprLucasSword:Spritemap = new Spritemap(Assets.Gphx_SimpleChar, 96, 96);
+		private var sprLucas:Spritemap = new Spritemap(Assets.Gphx_Lucas, 24, 24);
+		private var sprLucasSword:Spritemap = new Spritemap(Assets.Gphx_Lucas, 24, 24);
 		
 		//sound
 		private var regularShot:Sfx = new Sfx(Assets.GUNSHOT);
@@ -56,17 +56,21 @@ package
 			createSimpleCharSprite(sprLucas);
 			createSimpleCharAttack(sprLucasSword);
 			
+			addGraphic(sprLucasSword);
 			
 			currentAnim = "face right";
-
-//			sprGabriel.centerOO();
+			
 			sprLucas.centerOO();
+			sprLucas.scale = 2;
+			sprLucasSword.scale = 2;
 			sprLucasSword.centerOO();
-			setHitbox(24, 25, 12, 0);
+			setHitbox(24, 24, 12, 0);
 			
 			//charge timer
 			chargeTimer = new Timer (1000);
 			chargeTimer.addEventListener(TimerEvent.TIMER, chargeCheck);
+			
+			
 			
 			//dash timer
 			dashTimer = new Timer (100);
@@ -77,21 +81,19 @@ package
 			dashChargeTimer.addEventListener(TimerEvent.TIMER, dashChargeCheck);
 		}
 		
+		
+		var attacking:Boolean = false;
+		
 		override public function update():void
 		{	
-//			sprGabriel.alpha = 1;
-			sprLucas.alpha = 1;
-			sprLucasSword.alpha = 1;
 			var horizontalMovement:Boolean = true;
 			var verticalMovement:Boolean = true;
-//			sprGabriel.play(currentAnim);
+			
 			sprLucas.play(currentAnim);
 			sprLucasSword.play(currentAnim);
-//			sprGabrielCopy.play(currentAnim);
 			
 			//Set the copy to the same index as the original
 //			sprGabrielCopy.setAnimFrame(currentAnim, sprGabriel.index);
-			
 			
 			layer = 0;
 //			playerSpeed = 2;
@@ -115,7 +117,7 @@ package
 				else if (Input.check("Down"))  { 
 					if (collide("level", x, y + height)) y += playerSpeed;
 					currentAnim = "walk right"; */
-					
+			if(!attacking){
 				if (Input.check("Left"))  { 
 					x -= playerSpeed;
 					currentAnim = "walk left";
@@ -142,13 +144,13 @@ package
 //					world.add(new Shadow(x, y));
 					dashTimer.start();
 				}
-				
+			}	
 				if (!verticalMovement && !horizontalMovement) {
 					switch (currentAnim) {
-						case "walk left": currentAnim = "face left"; break;
-						case "walk right": currentAnim = "face right"; break;
-						case "walk down": currentAnim = "face down"; break;
-						case "walk up": currentAnim = "face up"; break;
+						case "walk left": 	currentAnim = "face left"; break;
+						case "walk right": 	currentAnim = "face right"; break;
+						case "walk down": 	currentAnim = "face down"; break;
+						case "walk up": 	currentAnim = "face up"; break;
 					}
 				}
 			
@@ -173,8 +175,9 @@ package
 				healthCurrent = healthCurrent - 10;
 			}
 			
-			if (Input.released("Attack"))
+			if (Input.pressed("Attack"))
 			{
+				attacking = true;
 				switch(currentAnim) {
 				case "walk right"	: currentAnim = "attack right" ; break;
 				case "walk up"		: currentAnim = "attack up" ; break;
@@ -185,6 +188,10 @@ package
 				case "face left" 	: currentAnim = "attack left" ; break;
 				case "face down" 	: currentAnim = "attack down" ; break;
 				}
+			}
+			
+			if (sprLucas.complete) {
+				attacking = false;
 			}
 			updateCollision();
 			
@@ -328,10 +335,10 @@ package
 		
 		private function createSpriteFromSpritemap (sm:Spritemap):void
 		{
-			sm.add("walk left", [5, 4, 5, 3], 10, true);
-			sm.add("walk right", [0, 1, 0, 2], 10, true);
-			sm.add("face left", [5], 0, false);
-			sm.add("face right", [0], 0, false);
+			sm.add("walk left", 	[5, 4, 5, 3], 10, true);
+			sm.add("walk right", 	[0, 1, 0, 2], 10, true);
+			sm.add("face left", 	[5], 0, false);
+			sm.add("face right", 	[0], 0, false);
 			
 			Input.define("Left", 	Key.A, Key.LEFT);
 			Input.define("Right", 	Key.D, Key.RIGHT);
@@ -344,18 +351,18 @@ package
 		
 		private function createSimpleCharSprite (sm:Spritemap):void
 		{
-			sm.add("walk down", [1, 2, 3, 4], 10, true);
-			sm.add("walk up", 	[6, 7, 8, 9], 10, true);
-			sm.add("walk left", [11, 12, 13, 14], 10, true);
-			sm.add("walk right", [16, 17, 18, 19], 10, true);
-			sm.add("face down", [0], 0, false);
-			sm.add("face up", 	[5], 0, false);
-			sm.add("face left", [10], 0, false);
-			sm.add("face right", [15], 0, false);
-			sm.add("attack down", [20, 21, 22], 10, false);
-			sm.add("attack up", [25, 26, 27], 10, false);
-			sm.add("attack left", [30, 31, 32], 10, false);
-			sm.add("attack right", [35, 36, 37], 10, false);
+			sm.add("walk down", 	[1, 2, 3, 4], 10, true);
+			sm.add("walk up", 		[7, 8, 9, 10], 10, true);
+			sm.add("walk left", 	[13, 14, 15, 16], 10, true);
+			sm.add("walk right", 	[19, 20, 21, 22], 10, true);
+			sm.add("face down", 	[0], 0, false);
+			sm.add("face up", 		[6], 0, false);
+			sm.add("face left", 	[12], 0, false);
+			sm.add("face right", 	[18], 0, false);
+			sm.add("attack down", 	[24, 25, 26], 10, false);
+			sm.add("attack up", 	[30, 31, 32], 10, false);
+			sm.add("attack left", 	[36, 37, 38], 10, false);
+			sm.add("attack right", 	[42, 43, 44], 10, false);
 			
 			Input.define("Left", 	Key.A, Key.LEFT);
 			Input.define("Right", 	Key.D, Key.RIGHT);
@@ -369,10 +376,21 @@ package
 		
 		private function createSimpleCharAttack(sm:Spritemap):void
 		{
-			sm.add("attack down", 	[null, 23, 24], 10, false);
-			sm.add("attack up", 	[null, 28, 29], 10, false);
-			sm.add("attack left", 	[null, 33, 34], 10, false);
-			sm.add("attack right", 	[null, 38, 39], 10, false);
+			sm.add("walk down", [5], 0, false);
+			sm.add("walk up", 	[5], 0, false);
+			sm.add("walk left", [5], 0, false);
+			sm.add("walk right",[5], 0, false);
+			sm.add("face down", [5], 0, false);
+			sm.add("face up", 	[5], 0, false);
+			sm.add("face left",	[5], 0, false);
+			sm.add("face right",[5], 0, false);
+			
+			sm.add("attack down", 	[27, 28, 29], 10, false);
+			sm.add("attack up", 	[33, 34, 35], 10, false);
+			sm.add("attack left", 	[39, 40, 41], 10, false);
+			sm.add("attack right", 	[45, 46, 47], 10, false);
+			
+			Input.define("Attack",	Key.V);
 		}
 		
 		public function playerCanMove(isAllowed:Boolean):void

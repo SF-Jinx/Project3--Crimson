@@ -61,7 +61,7 @@ package
 				speed = 0;
 				if (_bulletTrail != null) { _bulletTrail.visible = false; }
 				else if (_chargedTrail != null) { _chargedTrail.visible = false; }
-				world.add(new Explosion(x, y));
+				world.add(new Explosion(x, y, Assets.Gphx_BULLET));
 				this.visible = false;
 				world.remove(this);
 			}
