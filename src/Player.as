@@ -61,16 +61,14 @@ package
 			currentAnim = "face right";
 			
 			sprLucas.centerOO();
-			sprLucas.scale = 2;
-			sprLucasSword.scale = 2;
+			sprLucas.scale = 3;
+			sprLucasSword.scale = 3;
 			sprLucasSword.centerOO();
 			setHitbox(24, 24, 12, 0);
 			
 			//charge timer
 			chargeTimer = new Timer (1000);
 			chargeTimer.addEventListener(TimerEvent.TIMER, chargeCheck);
-			
-			
 			
 			//dash timer
 			dashTimer = new Timer (100);
@@ -82,7 +80,7 @@ package
 		}
 		
 		
-		var attacking:Boolean = false;
+		private var attacking:Boolean = false;
 		
 		override public function update():void
 		{	
@@ -99,42 +97,23 @@ package
 //			playerSpeed = 2;
 			
 			//inputs for motion and moving animations
-			
-/*				if (Input.check("Left"))  { 
-					if (collide("level", x - width, y)) x -= playerSpeed;
-					currentAnim = "walk left";
-				}
-				else if (Input.check("Right")) { 
-					if (collide("level", x + width, y))	x += playerSpeed; 
-					currentAnim = "walk right";
-				}
-				else horizontalMovement = false;
-				
-				if (Input.check("Up"))    { 
-					if (collide("level", x, y - height)) y -= playerSpeed; 
-					currentAnim = "walk left";
-				}
-				else if (Input.check("Down"))  { 
-					if (collide("level", x, y + height)) y += playerSpeed;
-					currentAnim = "walk right"; */
-			if(!attacking){
 				if (Input.check("Left"))  { 
-					x -= playerSpeed;
-					currentAnim = "walk left";
+					x -= playerSpeed; 
+					dir = 3.14;
 				}
 				else if (Input.check("Right")) { 
 					x += playerSpeed; 
-					currentAnim = "walk right";
+					dir = 0;
 				}
 				else horizontalMovement = false;
 				
 				if (Input.check("Up"))    { 
 					y -= playerSpeed; 
-					currentAnim = "walk up";
+					dir = 3.14 * 1.5;
 				}
 				else if (Input.check("Down"))  { 
 					y += playerSpeed;
-					currentAnim = "walk down"; 
+					dir = 3.14 * .5;
 				}
 				else verticalMovement = false;
 				
@@ -144,17 +123,9 @@ package
 //					world.add(new Shadow(x, y));
 					dashTimer.start();
 				}
-			}	
-				if (!verticalMovement && !horizontalMovement) {
-					switch (currentAnim) {
-						case "walk left": 	currentAnim = "face left"; break;
-						case "walk right": 	currentAnim = "face right"; break;
-						case "walk down": 	currentAnim = "face down"; break;
-						case "walk up": 	currentAnim = "face up"; break;
-					}
-				}
-			
-			setDirection();
+				
+			setAnimation(verticalMovement, horizontalMovement);
+//			setDirection();
 			
 			//stuff for shootin'
 			if (Input.pressed("Shoot")) 
@@ -175,19 +146,8 @@ package
 				healthCurrent = healthCurrent - 10;
 			}
 			
-			if (Input.pressed("Attack"))
-			{
+			if (Input.pressed("Attack")) {
 				attacking = true;
-				switch(currentAnim) {
-				case "walk right"	: currentAnim = "attack right" ; break;
-				case "walk up"		: currentAnim = "attack up" ; break;
-				case "walk left" 	: currentAnim = "attack left" ; break;
-				case "walk down" 	: currentAnim = "attack down" ; break;
-				case "face right"	: currentAnim = "attack right" ; break;
-				case "face up"		: currentAnim = "attack up" ; break;
-				case "face left" 	: currentAnim = "attack left" ; break;
-				case "face down" 	: currentAnim = "attack down" ; break;
-				}
 			}
 			
 			if (sprLucas.complete) {
@@ -205,18 +165,19 @@ package
 			else onGround = false;
 		}
 		
-		private function setDirection():void
+		private var action:String = "face ";
+		
+		private function setAnimation(verticalMovement:Boolean, horizontalMovement:Boolean):void
 		{
-//			dir = Math.atan2(world.mouseY-y, world.mouseX-x); //follow the mouse
-			switch(currentAnim) {
-				case "walk right"	: dir = 0; break;
-				case "walk up"		: dir = (3.14 * 1.5); break;
-				case "walk left" 	: dir = (3.14); break;
-				case "walk down" 	: dir = (3.14 * .5); break;
-				case "face right"	: dir = 0; break;
-				case "face up"		: dir = (3.14 * 1.5); break;
-				case "face left" 	: dir = 3.14; break;
-				case "face down" 	: dir = (3.14 * .5); break;
+			if (attacking) 										action = "attack ";
+			else if (!verticalMovement && !horizontalMovement) 	action = "face ";
+			else if (verticalMovement || horizontalMovement) 	action = "walk ";
+			
+			switch (dir) {
+				case 0			:	currentAnim = action + "right"; break;
+				case 3.14 * 1.5	:	currentAnim = action + "up"; 	break;
+				case 3.14		:	currentAnim = action + "left"; 	break;
+				case 3.14 * .5	:	currentAnim = action + "down";	break;
 			}
 		}
 		
